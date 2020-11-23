@@ -1,0 +1,6 @@
+FROM qihaoliu/tweetoscope:gaml-cappkafka-v1
+
+WORKDIR /tweetgenerator
+RUN wget https://raw.githubusercontent.com/buaalqh/tweetoscope/master/estimator/logger.py
+
+CMD python3 logger.py --broker-list localhost:9092
