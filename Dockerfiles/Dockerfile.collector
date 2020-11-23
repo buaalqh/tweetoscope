@@ -1,0 +1,14 @@
+FROM qihaoliu/tweetoscope:gaml-cappkafka-v1
+
+WORKDIR /tweetgenerator
+RUN wget https://raw.githubusercontent.com/buaalqh/tweetoscope/master/collector/Collector.cpp
+RUN wget https://raw.githubusercontent.com/buaalqh/tweetoscope/master/collector/Collector.hpp
+RUN wget https://raw.githubusercontent.com/buaalqh/tweetoscope/master/collector/tweet-collector.cpp
+RUN wget https://raw.githubusercontent.com/buaalqh/tweetoscope/master/collector/tweetoscopeCollectorParams.hpp
+RUN wget https://raw.githubusercontent.com/buaalqh/tweetoscope/master/param/params-collector.config
+
+RUN g++ -o tweet-collector tweet-collector.cpp -O3 $(pkg-config --cflags --libs gaml) -lpthread -lcppkafka -lrdkafka
+
+CMD ./tweet-collector params-collector.config 
+
+#docker run --rm -it --network host qihaoliu/tweetoscope:collector-v1
