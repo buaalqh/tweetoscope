@@ -54,5 +54,5 @@ RUN cmake -DCPPKAFKA_BUILD_SHARED=OFF ..; make ; make install; ldconfig
 
 # Python kafka
 RUN apt-get install -y python3-pip
-pip3 install kafka-python
+RUN pip3 install kafka-python
 
