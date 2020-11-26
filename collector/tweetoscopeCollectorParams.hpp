@@ -25,7 +25,7 @@ namespace tweetoscope {
       };
       
       struct Topic {
-	std::string in, out_series, out_properties, out_logs;
+	std::string in, out_series, out_properties;
       };
       
       struct Times {
@@ -83,7 +83,6 @@ namespace tweetoscope {
 	      if     (key == "in")             topic.in             = val;
 	      else if(key == "out_series")     topic.out_series     = val;
 	      else if(key == "out_properties") topic.out_properties = val;
-		  else if(key == "out_logs") 	   topic.out_logs 		= val; 
 	    }
 	    else if(current_section == "times") {
 	      if     (key == "observation")    times.observation.push_back(std::stoul(val));
@@ -106,7 +105,6 @@ namespace tweetoscope {
 	 << "  in=" << c.topic.in << std::endl
 	 << "  out_series=" << c.topic.out_series << std::endl
 	 << "  out_properties=" << c.topic.out_properties << std::endl
-	 << "  out_logs=" << c.topic.out_logs << std::endl
 	 << std::endl
 	 << "[times]" << std::endl;
       for(auto& o : c.times.observation)

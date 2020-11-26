@@ -49,12 +49,12 @@ int main(int argc, char* argv[]) {
 	};
 
 	cppkafka::Consumer consumer(config);
-  
+
   
   consumer.subscribe({params.topic.in});
 
   //Create a Processor Map 
-  tweetoscope::Processor_map processors(argv[1]);
+  tweetoscope::Processors processors(argv[1]);
 
 
   while(true) {
