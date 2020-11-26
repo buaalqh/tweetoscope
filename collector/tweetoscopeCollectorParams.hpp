@@ -25,7 +25,7 @@ namespace tweetoscope {
       };
       
       struct Topic {
-	std::string in, out_series, out_properties, out_logs;;
+	std::string in, out_series, out_properties, out_logs;
       };
       
       struct Times {
