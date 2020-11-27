@@ -56,57 +56,54 @@ std::string msg_cascade_properties(const Cascade& c) {
 // Send debug Message to Kafka topic logs about partial cascade:
 void send_partial_to_logs(const std::size_t& window_first ,tweetoscope::cascade::ref sp, 
 cppkafka::MessageBuilder& builder_logs, cppkafka::Producer& producer, const tweetoscope::params::collector& params){
+      std::ostringstream ostr;
+      ostr 	<< "Cascade " << sp->cid 
+          << " with time window " << window_first 
+          << " was sent out to " << params.topic.out_series 
+          << ".";
+      //std::cout << std::endl << ostr.str() << std::endl << std::endl;
+      std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+      std::time_t now_c = std::chrono::system_clock::to_time_t(now);									
+      std::ostringstream ostr2;
+      ostr2	<< 	"{\"t\": "	<< now_c
+          << ", \"source\": \"Collector\", \"level\": \"DEBUG\", \"message\": \""
+          <<	ostr.str()
+          <<	"\"}";
+      
+      builder_logs.key(params.topic.out_logs);
+      auto msg_out = ostr2.str();
+      builder_logs.payload(msg_out);
 
-	std::ostringstream ostr;
-	ostr 	<< "Cascade " << sp->cid 
-			<< " with time window " << window_first 
-			<< " was sent out to " << params.topic.out_series 
-			<< ".";
-
-	//std::cout << std::endl << ostr.str() << std::endl << std::endl;
-
-	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-	std::time_t now_c = std::chrono::system_clock::to_time_t(now);									
-
-	std::ostringstream ostr2;
-	ostr2	<< 	"{\"t\": "	<< now_c
-			<< ", \"source\": \"Collector\", \"level\": \"DEBUG\", \"message\": \""
-			<<	ostr.str()
-			<<	"\"}";
-	
-	builder_logs.key(params.topic.out_logs);
-	auto msg_out = ostr2.str();
-	builder_logs.payload(msg_out);
-	producer.produce(builder_logs);
+      producer.produce(builder_logs);
 	//producer.flush();
+	std::chrono::milliseconds timespan(1000);
+	std::this_thread::sleep_for(timespan);
 }
 //Send Debug Message to topic logs about cascade terminaison:
 void send_terminaison_to_logs(const std::size_t& observation_time ,tweetoscope::cascade::ref sp_top, 
 cppkafka::MessageBuilder& builder_logs, cppkafka::Producer& producer, const tweetoscope::params::collector& params){
-
-
-	std::string	key_str = std::to_string(static_cast<int>(observation_time));
-	std::ostringstream ostr;
-	ostr 	<< "Cascade " 							<< sp_top->cid
-			<< " was terminated and sent out to " 	<< params.topic.out_properties
-			<< " with key "							<< key_str 
-			<< ".";
-
-	//std::cout << std::endl << ostr.str() << std::endl << std::endl;
-	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-	std::time_t now_c = std::chrono::system_clock::to_time_t(now);									
-
-	std::ostringstream ostr2;
-	ostr2	<< 	"{\"t\": "	<< now_c
-			<< ", \"source\": \"Collector\", \"level\": \"DEBUG\", \"message\": \""
-			<<	ostr.str()
-			<<	"\"}";
-	
-	builder_logs.key(params.topic.out_logs);
-	auto msg_out = ostr2.str();
-	builder_logs.payload(msg_out);
-	producer.produce(builder_logs);
-	//producer.flush();
+    std::string	key_str = std::to_string(static_cast<int>(observation_time));
+    std::ostringstream ostr;
+    ostr 	<< "Cascade " 							<< sp_top->cid
+        << " was terminated and sent out to " 	<< params.topic.out_properties
+        << " with key "							<< key_str 
+        << ".";
+    //std::cout << std::endl << ostr.str() << std::endl << std::endl;
+    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+    std::time_t now_c = std::chrono::system_clock::to_time_t(now);									
+    std::ostringstream ostr2;
+    ostr2	<< 	"{\"t\": "	<< now_c
+        << ", \"source\": \"Collector\", \"level\": \"DEBUG\", \"message\": \""
+        <<	ostr.str()
+        <<	"\"}";
+    
+    builder_logs.key(params.topic.out_logs);
+    auto msg_out = ostr2.str();
+    builder_logs.payload(msg_out);
+    producer.produce(builder_logs);
+	std::chrono::milliseconds timespan(1000);
+	std::this_thread::sleep_for(timespan);
+    //producer.flush();
 }
 
 
